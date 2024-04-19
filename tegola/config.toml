@@ -1,0 +1,743 @@
+[webserver]
+port = ":8080"
+
+[webserver.headers]
+Cache-Control = "s-maxage=3600"
+
+[cache]
+type="redis"
+address="redis:6379"
+password=""
+ttl=15
+
+[[providers]]
+name = "eiel"
+type = "mvt_postgis"
+uri = "postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}" # PostGIS connection string (required)
+srid = 3857             
+
+  [[providers.layers]]
+  name = "muni2022"
+  geometry_fieldname = "geom"
+  geometry_type="polygon"
+  id_fieldname = "gid"
+  srid = 3857
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid FROM nomecalles.muni2022 WHERE geom && !BBOX!"
+
+  [[providers.layers]]
+  name = "equipamientos_municipales"
+  geometry_fieldname = "geom"
+  geometry_type="point"
+  id_fieldname = "gid"
+  srid = 3857
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.equipamientos_municipales WHERE used = 'N' and geom && !BBOX!"
+  
+  [[providers.layers]]
+  name = "nucleos"
+  geometry_fieldname = "geom"
+  geometry_type="point"
+  id_fieldname = "gid"
+  srid = 3857
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid FROM nomecalles.nucleos WHERE geom && !BBOX!"
+
+
+  [[providers.layers]]
+  name = "masa"
+  geometry_fieldname = "geometry"
+  geometry_type="polygon"
+  id_fieldname = "gid"
+  srid = 3857
+  sql = "SELECT ST_AsMVTGeom(geometry, !BBOX!) AS geometry, *, gid FROM nomecalles.masa WHERE geometry && !BBOX!"
+
+  [[providers.layers]]
+  name = "parcela"
+  geometry_fieldname = "geometry"
+  geometry_type="polygon"
+  id_fieldname = "gid"
+  srid = 3857
+  sql = "SELECT ST_AsMVTGeom(geometry, !BBOX!) AS geometry, *, gid FROM nomecalles.parcela WHERE geometry && !BBOX!"
+
+  [[providers.layers]]
+  name = "constru"
+  geometry_fieldname = "geometry"
+  geometry_type="polygon"
+  id_fieldname = "gid"
+  srid = 3857
+  sql = "SELECT ST_AsMVTGeom(geometry, !BBOX!) AS geometry, *, gid FROM nomecalles.constru WHERE geometry && !BBOX!"
+
+  [[providers.layers]]
+  name = "subparce"
+  geometry_fieldname = "geometry"
+  geometry_type="polygon"
+  id_fieldname = "gid"
+  srid = 3857
+  sql = "SELECT ST_AsMVTGeom(geometry, !BBOX!) AS geometry, *, gid FROM nomecalles.subparce WHERE geometry && !BBOX!"
+
+  [[providers.layers]]
+  name = "dist2022"
+  geometry_fieldname = "geom"
+  geometry_type="polygon"
+  id_fieldname = "gid"
+  srid = 3857
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, descr, gid FROM nomecalles.dist2022 WHERE geom && !BBOX!"
+
+  [[providers.layers]]
+  name = "centrosalud"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.centrosalud WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "biblimunicipal"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.biblimunicipal WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "bibliobus"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.bibliobus WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "bibliometro"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.bibliometro WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "bomberos"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.bomberos WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "casas_consistoriales"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.casas_consistoriales WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "cementerios"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.cementerios WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "centrocom"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.centrocom WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "centroespecialidades"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, descr as mi_etiqueta FROM nomecalles.centroespecialidades WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "centrolectura"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.centrolectura WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "cines"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.cines WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "colegiosmayores"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.colegiosmayores WHERE geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "comerespecial"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, descr as mi_etiqueta FROM nomecalles.comerespecial WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "consultoriosalud"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, descr as mi_etiqueta FROM nomecalles.consultoriosalud WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "drogodependencia"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.drogodependencia WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "educapr"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid FROM nomecalles.educapr WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "educapu"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, descr as mi_etiqueta FROM nomecalles.educapu WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "educase"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.educase WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "galerias"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.galerias WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "galimenta"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, denominaci as mi_etiqueta FROM nomecalles.galimenta WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "gdie_g_calles"
+  geometry_type = "linestring"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid FROM nomecalles.gdie_g_calles WHERE geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "gdie_g_paseillo"
+  geometry_type = "linestring"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid FROM nomecalles.gdie_g_paseillo WHERE geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "hipermercados"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, descr as mi_etiqueta FROM nomecalles.hipermercados WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "hospital"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.hospital WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "inmigrantes"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, descr as mi_etiqueta FROM nomecalles.inmigrantes WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "librerias"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.librerias WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "mercadillos"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, nombre as mi_etiqueta FROM nomecalles.mercadillos WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "mercado"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.mercado WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "museos"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.museos WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "n_policia"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid FROM nomecalles.n_policia WHERE geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "nmcl_deporte"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, descr as mi_etiqueta FROM nomecalles.nmcl_deporte WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "nmcl_deporteotros"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, descr as mi_etiqueta FROM nomecalles.nmcl_deporteotros WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "nmcl_imder"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, descr as mi_etiqueta FROM nomecalles.nmcl_imder WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "parques"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.parques WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "parquesocio"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.parquesocio WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "parroquias"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.parroquias WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "peligrosos"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.peligrosos WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "plazastoros"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.plazastoros WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "proteccioncivil"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.proteccioncivil WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "puntoslim"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.puntoslim WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "saludmental"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, descr as mi_etiqueta FROM nomecalles.saludmental WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "saludotros"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.saludotros WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "ssociales"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, descr as mi_etiqueta FROM nomecalles.ssociales WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "teatros"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.teatros WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "univers"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.univers WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "vertederos"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, etiqueta as mi_etiqueta FROM nomecalles.vertederos WHERE used = 'N' and geom && !BBOX!"
+  srid = 3857
+
+  [[providers.layers]]
+  name = "equipamientos"
+  geometry_type = "point"
+  geometry_fieldname = "geom"
+  id_fieldname = "gid"
+  sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, *, gid, nombre as mi_etiqueta FROM sig.equipamientos WHERE geom && !BBOX!"
+  srid = 3857
+
+
+
+
+
+[[maps]]
+
+  name = "eiel"
+  center = [4.1491, 37.2669, 11.0] # set the center of the map so the user is auto navigated to Bonn
+
+  [[maps.layers]]
+  provider_layer = "eiel.muni2022"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.nucleos"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.masa"
+  min_zoom = 13
+  max_zoom = 15
+
+  [[maps.layers]]
+  provider_layer = "eiel.parcela"
+  min_zoom = 15
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.subparce"
+  min_zoom = 17
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.constru"
+  min_zoom = 18
+  max_zoom = 20
+
+  
+  [[maps.layers]]
+  provider_layer = "eiel.dist2022"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.centrosalud"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.biblimunicipal"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.bibliobus"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.bibliometro"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.bomberos"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.casas_consistoriales"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.cementerios"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.centrocom"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.centroespecialidades"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.centrolectura"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.cines"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.colegiosmayores"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.comerespecial"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.consultoriosalud"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.drogodependencia"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.educapr"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.educapu"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.educase"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.galerias"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.galimenta"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.gdie_g_calles"
+  min_zoom = 13
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.gdie_g_paseillo"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.hipermercados"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.hospital"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.inmigrantes"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.librerias"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.mercadillos"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.mercado"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.museos"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.n_policia"
+  min_zoom = 15
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.nmcl_deporte"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.nmcl_deporteotros"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.nmcl_imder"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.parques"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.parquesocio"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.parroquias"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.peligrosos"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.plazastoros"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.proteccioncivil"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.puntoslim"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.saludmental"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.saludotros"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.ssociales"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.teatros"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.univers"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.vertederos"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.equipamientos_municipales"
+  min_zoom = 1
+  max_zoom = 20
+
+  [[maps.layers]]
+  provider_layer = "eiel.equipamientos"
+  min_zoom = 1
+  max_zoom = 20

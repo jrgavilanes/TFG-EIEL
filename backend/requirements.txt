@@ -1,0 +1,17 @@
+fastapi~=0.109.2
+uvicorn~=0.26.0
+jinja2
+psycopg2-binary
+shapely
+sqlalchemy~=2.0.25
+geoalchemy2
+uuid
+pillow
+python-multipart
+passlib[bcrypt]
+python-jose[cryptography]
+python-dotenv~=1.0.0
+pydantic~=2.5.3
+boto3
+pillow
+user-agents
