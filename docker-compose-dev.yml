@@ -3,7 +3,7 @@ services:
 
   db:
     image: postgis/postgis:13-3.1
-    container_name: postgis-eiel
+    container_name: tfg-postgis-eiel
     restart: always
     environment:
       POSTGRES_USER: ${DATABASE_USER}
@@ -11,26 +11,26 @@ services:
       POSTGRES_DB: sig_local
     volumes:
       - ./database/initdb:/docker-entrypoint-initdb.d
-      - pgdata-tfg:/var/lib/postgresql/data
+      - tfg-pgdata:/var/lib/postgresql/data
     ports:
-      - "9003:5432"
+      - "8003:5432"
 
   redis:
     image: redis:6.2.6
-    container_name: redis
+    container_name: tfg-redis
     restart: always
     ports:
-      - 6379:6379
+      - 8379:6379
 
   tegola-mvt-postgis-provider:
     image: gospatial/tegola:v0.16.0
-    container_name: tegola-mvt-postgis-provider
+    container_name: tfg-tegola-mvt-postgis-provider
     depends_on:
       - db
       - redis
     restart: always
     ports:
-      - 9005:8080
+      - 8005:8080
     volumes:
       - ./tegola:/data
     command: >
@@ -43,4 +43,4 @@ services:
       DB_PASSWORD: ${DATABASE_PASSWORD}
 
 volumes:
-  pgdata-tfg:
+  tfg-pgdata:
