@@ -11,7 +11,7 @@ services:
       POSTGRES_DB: sig_local
     volumes:
       - ./database/initdb:/docker-entrypoint-initdb.d
-      - pgdata:/var/lib/postgresql/data
+      - pgdata-tfg:/var/lib/postgresql/data
     ports:
       - "9003:5432"
 
@@ -43,4 +43,4 @@ services:
       DB_PASSWORD: ${DATABASE_PASSWORD}
 
 volumes:
-  pgdata:
+  pgdata-tfg:
