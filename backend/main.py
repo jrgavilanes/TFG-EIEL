@@ -1,21 +1,22 @@
+import os
+import uvicorn
 from fastapi import FastAPI
 
-# Crea una instancia de la aplicación FastAPI
-app = FastAPI()
+from routers import auth
 
-# Define una ruta raíz que responde con un mensaje
-@app.get("/")
-def read_root():
-    return {"message": "¡Hola, mundo!"}
+PRODUCTION = os.getenv('PRODUCTION', "false")
+if PRODUCTION.lower().strip() == "true":
+    app = FastAPI(debug=False, docs_url=None, redoc_url=None)
+else:
+    app = FastAPI(debug=True, docs_url="/api/docs", openapi_url="/api/openapi.json")
 
-# Define una ruta que recibe un parámetro y lo devuelve
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: str = None):
-    return {"item_id": item_id, "q": q}
+app.include_router(auth.router)
 
-# Ejecuta el servidor solo si este archivo se ejecuta directamente
-if __name__ == "__main__":
-    import uvicorn
 
-    # Inicia el servidor con Uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+@app.get("/api/")
+async def is_live():
+    return {"status": "OK"}
+
+
+if __name__ == '__main__':
+    uvicorn.run(app, port=7000, host="127.0.0.1")
