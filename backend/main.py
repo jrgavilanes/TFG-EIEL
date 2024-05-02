@@ -2,7 +2,7 @@ import os
 import uvicorn
 from fastapi import FastAPI
 
-from routers import auth, helpers, uploader, cemeteries, assistance_centers, civil_protections
+from routers import auth, helpers, uploader, cemeteries, assistance_centers, civil_protections, cultural_centers
 
 PRODUCTION = os.getenv('PRODUCTION', "false")
 if PRODUCTION.lower().strip() == "true":
@@ -16,6 +16,7 @@ app.include_router(uploader.router)
 app.include_router(cemeteries.router)
 app.include_router(assistance_centers.router)
 app.include_router(civil_protections.router)
+app.include_router(cultural_centers.router)
 
 
 @app.get("/api/")
