@@ -2,7 +2,7 @@ import os
 import uvicorn
 from fastapi import FastAPI
 
-from routers import auth, helpers, uploader
+from routers import auth, helpers, uploader, cemeteries
 
 PRODUCTION = os.getenv('PRODUCTION', "false")
 if PRODUCTION.lower().strip() == "true":
@@ -13,6 +13,7 @@ else:
 app.include_router(auth.router)
 app.include_router(helpers.router)
 app.include_router(uploader.router)
+app.include_router(cemeteries.router)
 
 
 @app.get("/api/")
