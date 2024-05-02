@@ -2,7 +2,7 @@ import os
 import uvicorn
 from fastapi import FastAPI
 
-from routers import auth
+from routers import auth, helpers, uploader
 
 PRODUCTION = os.getenv('PRODUCTION', "false")
 if PRODUCTION.lower().strip() == "true":
@@ -11,6 +11,8 @@ else:
     app = FastAPI(debug=True, docs_url="/api/docs", openapi_url="/api/openapi.json")
 
 app.include_router(auth.router)
+app.include_router(helpers.router)
+app.include_router(uploader.router)
 
 
 @app.get("/api/")
