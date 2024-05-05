@@ -1,0 +1,9 @@
+RewriteEngine On
+# Si la solicitud es para un archivo, directorio o enlace simbólico existente, se sirve directamente
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f [OR]
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d [OR]
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -l
+RewriteRule ^ - [L]
+
+# Para cualquier otra solicitud, se redirige a index.html
+RewriteRule ^ /index.html [L]

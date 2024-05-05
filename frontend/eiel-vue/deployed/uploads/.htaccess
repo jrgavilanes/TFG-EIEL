@@ -1,0 +1,12 @@
+# Desactivar la lista de directorios
+Options -Indexes
+
+# Proteger el archivo .htaccess
+<Files .htaccess>
+Order allow,deny
+Deny from all
+</Files>
+
+# No permitir la ejecución de scripts
+AddHandler cgi-script .php .pl .py .jsp .asp .htm .shtml .sh .cgi
+Options -ExecCGI
