@@ -160,7 +160,7 @@ onMounted(() => {
                     ],
                     tileSize: 256,
                     attribution:
-                        `Avantgeo ${new Date().getFullYear()}. Server:${window.location.hostname}`
+                        `TFG EIEL ${new Date().getFullYear()}. Server:${window.location.hostname}`
                 },
                 rasterLayer: {
                     type: "raster",
@@ -169,7 +169,7 @@ onMounted(() => {
                     ],
                     tileSize: 256,
                     attribution:
-                        `Avantgeo ${new Date().getFullYear()}. Server:${window.location.hostname}`
+                        `TFG EIEL ${new Date().getFullYear()}. Server:${window.location.hostname}`
                 },
                 muni2022: {
                     type: "vector",

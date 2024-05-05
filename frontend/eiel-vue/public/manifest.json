@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "EIEL Avantgeo",
+  "name": "TFG EIEL",
   "short_name": "EIEL",
-  "description": "EIEL Avantgeo",
+  "description": "TFG EIEL",
   "start_url": "/",
   "display": "standalone",
   "orientation": "any",
