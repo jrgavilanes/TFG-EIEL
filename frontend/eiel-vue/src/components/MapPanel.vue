@@ -8,7 +8,7 @@ import iconMenu from './icons/iconMenu.vue'
 import MapLateralMenu from './MapLateralMenu.vue'
 
 import { useMapStore } from '../stores/mapStore.js'
-// import EquipmentCreate from './EquipmentCreate.vue';
+
 import CementerioForm from './polls/CementerioForm.vue'
 import CasaConsitorialForm from './polls/CasaConsitorialForm.vue'
 import AssistanceCenterForm from './polls/AssistanceCenterForm.vue'
@@ -28,59 +28,30 @@ import { useUserStore } from '@/stores/userStore';
 const userStore = useUserStore();
 
 
-
 const mapStore = useMapStore()
 
 async function checkToken() {
-        const data = await fetch(`/api/cemeteries/`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + userStore.user.token,
-            }
-        })
-
-        if (data.status === 401) {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Token de seguridad inválido. Por favor, inicie sesión nuevamente.',
-                icon: 'error',
-                confirmButtonText: 'OK',
-                timer: 3000
-            }).then(() => {
-                // router.replace({ name: 'Login' });
-                window.location.href = '/login';
-                return;
-            });
+    const data = await fetch(`/api/cemeteries/`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + userStore.user.token,
         }
-        // console.log('Token válido')
-    }
+    })
 
-async function initCamera() {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        const mediaDevices = await navigator.mediaDevices.enumerateDevices();
-        const cameraDevices = mediaDevices.filter((device) => device.kind === "videoinput");
-        // console.log('cameraDevices', cameraDevices);
-        // console.log('stream', stream);
-    } catch (error) {
-        alert('No tiene permisos para acceder a la cámara:', error);
-    }
-}
-
-async function initGPS() {    
-    if (navigator.permissions && navigator.permissions.query) {
-        navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
-            const permission = result.state;
-            if (permission === 'granted' || permission === '   ' || permission === 'prompt') {
-                // console.log('Geolocalización permitida');
-            } else if (permission === 'denied') {
-                alert("El permiso de geolocalización está denegado. Para activarlo acceda a la URL de la aplicación en el navegador y actívelo desde ahí");
-            }
+    if (data.status === 401) {
+        Swal.fire({
+            title: 'Error!',
+            text: 'Token de seguridad inválido. Por favor, inicie sesión nuevamente.',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            timer: 3000
+        }).then(() => {
+            window.location.href = '/login';
+            return;
         });
-    } else if (navigator.geolocation) {
-        // console.log('Geolocalización permitida');
     }
+
 }
 
 const startPoll = async () => {
@@ -116,17 +87,7 @@ const startPoll = async () => {
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            const opcionSeleccionada = result.value;
-            // router.push({
-            //     name: 'create-equipment', params: {
-            //         tipo_equipamiento: opcionSeleccionada,
-            //         mi_etiqueta: feature.properties.mi_etiqueta,
-            //         lat: e.lngLat.lat,
-            //         lng: e.lngLat.lng,
-            //         geom: feature.properties.geom,
-            //         field_nomecalles: `${feature.source}|${feature.properties.gid}`
-            //     }
-            // })
+            const opcionSeleccionada = result.value;            
             Object.assign(mapStore.payload, {
                 gid: null,
                 tipo_equipamiento: opcionSeleccionada,
@@ -142,11 +103,7 @@ const startPoll = async () => {
 }
 
 onMounted(() => {
-    
-    // initCamera();
-    // initGPS();
     checkToken();
-
     mapStore.map = new Map({
         container: 'map',
         style: {
@@ -281,11 +238,7 @@ onMounted(() => {
         maxZoom: 19
     });
 
-    mapStore.map.on('click', (e) => {
-        // if (!mapStore.showMenu) {
-        //     mapStore.addMarker(e.lngLat.lng, e.lngLat.lat)
-        // }
-        // mapStore.showMenu = false
+    mapStore.map.on('click', (e) => {        
         mapStore.addMarker(e.lngLat.lng, e.lngLat.lat)
     })
 
@@ -353,10 +306,11 @@ onMounted(() => {
                 :tipo_equipamiento="mapStore.payload.tipo_equipamiento" :geom="mapStore.payload.geom"
                 :field_nomecalles="mapStore.payload.field_nomecalles" :gid="mapStore.payload.gid" />
 
-            <EducationalCenterForm v-if="mapStore.payload.tipo_equipamiento === 'EN'" :lat="Number(mapStore.payload.lat)"
-                :lng="Number(mapStore.payload.lng)" :mi_etiqueta="mapStore.payload.mi_etiqueta"
-                :tipo_equipamiento="mapStore.payload.tipo_equipamiento" :geom="mapStore.payload.geom"
-                :field_nomecalles="mapStore.payload.field_nomecalles" :gid="mapStore.payload.gid" />
+            <EducationalCenterForm v-if="mapStore.payload.tipo_equipamiento === 'EN'"
+                :lat="Number(mapStore.payload.lat)" :lng="Number(mapStore.payload.lng)"
+                :mi_etiqueta="mapStore.payload.mi_etiqueta" :tipo_equipamiento="mapStore.payload.tipo_equipamiento"
+                :geom="mapStore.payload.geom" :field_nomecalles="mapStore.payload.field_nomecalles"
+                :gid="mapStore.payload.gid" />
 
             <MedicalCenterForm v-if="mapStore.payload.tipo_equipamiento === 'SA'" :lat="Number(mapStore.payload.lat)"
                 :lng="Number(mapStore.payload.lng)" :mi_etiqueta="mapStore.payload.mi_etiqueta"

@@ -12,8 +12,16 @@ const props = defineProps({
 
 import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { aa_estado, aa_acceso_s_ruedas, aa_fase } from '@/composables/dominioComposable.js';
-import { casa_consistorial_tenencia, casa_consistorial_tipo, casa_consistorial_titular, casa_consistorial_uso } from '@/composables/casaConsitorialComposable.js';
+import {
+    aa_estado,
+    aa_acceso_s_ruedas, aa_fase
+} from '@/composables/dominioComposable.js';
+
+import {
+    casa_consistorial_tenencia,
+    casa_consistorial_tipo, casa_consistorial_titular, casa_consistorial_uso
+} from '@/composables/casaConsitorialComposable.js';
+
 import Swal from 'sweetalert2';
 
 import { useMapStore } from '@/stores/mapStore.js'
@@ -21,8 +29,6 @@ const mapStore = useMapStore();
 
 import { useUserStore } from '@/stores/userStore';
 const userStore = useUserStore();
-
-
 const router = useRouter();
 
 const isLoading = ref(false);
@@ -54,6 +60,20 @@ const formData = reactive({
     usos: {},
     usos_s_cubi: {}
 });
+
+const isValidForm = () => {
+
+    return formData.nombre &&
+        formData.titular &&
+        formData.tipo &&
+        formData.acceso_s_ruedas &&
+        formData.nombre && formData.nombre.length <= 50 &&
+        formData.tenencia &&
+        !isNaN(formData.s_cubi) && formData.s_cubi &&
+        !isNaN(formData.s_aire) && formData.s_aire &&
+        !isNaN(formData.s_sola) && formData.s_sola
+
+}
 
 const getInfoByEquipmentId = async (gid) => {
     isLoading.value = true;
@@ -450,7 +470,7 @@ const postInfo = () => {
                 }).then((response) => {
 
                     mapStore.listaEquipamientoMunicipales.casas_consistoriales = true;
-                    
+
                     if (response.isConfirmed) {
                         if (mapStore.showEquipmentForm) {
                             formData.gid = data.inserted_id;
@@ -517,19 +537,19 @@ const postInfo = () => {
 }
 
 const handleFileChange = (event) => {
-    isLoading.value = true;    
-    navigator.geolocation.getCurrentPosition((coord)=>{
+    isLoading.value = true;
+    navigator.geolocation.getCurrentPosition((coord) => {
         const { latitude, longitude } = coord.coords;
         const file = event.target.files[0];
         const payload = new FormData();
         payload.append("new_file", file);
         const url = `/api/upload/${props.tipo_equipamiento}/${formData.gid}/${formData.cod}/${latitude}/${longitude}`;
-        fetch( url, {
-                method: "POST",
-                headers: {
-                    'Authorization': 'Bearer ' + userStore.user.token,
-                },
-                body: payload,
+        fetch(url, {
+            method: "POST",
+            headers: {
+                'Authorization': 'Bearer ' + userStore.user.token,
+            },
+            body: payload,
         }).then((response) => {
             return response.json();
         }).then((data) => {
@@ -554,18 +574,15 @@ const handleFileChange = (event) => {
         }).finally(() => {
             isLoading.value = false;
         });
-    }, (error)=>{
+    }, (error) => {
         console.error("Error:", error);
         alert('Error al obtener la ubicación. Active la ubicación del dispositivo', error);
         isLoading.value = false;
-    });    
+    });
 }
 
 onMounted(() => {
-    // console.log('mounted');
-    // console.log(props.lat, props.lng, props.mi_etiqueta, props.gid, props.geom);
     if (props.gid) {
-        // console.log('update');
         getInfoByEquipmentId(props.gid);
     } else {
         getInfoByCoords(props.lat, props.lng, props.geom);
@@ -575,7 +592,7 @@ onMounted(() => {
 
 const closeForm = () => {
     mapStore.currentMarker.remove()
-    mapStore.currentMarker = null    
+    mapStore.currentMarker = null
 
     if (mapStore.showEquipmentForm) {
         Object.assign(mapStore.payload, {
@@ -590,20 +607,6 @@ const closeForm = () => {
     } else {
         window.location.replace('/');
     }
-}
-
-const isValidForm = () => {
-
-    return formData.nombre &&
-        formData.titular &&
-        formData.tipo &&
-        formData.acceso_s_ruedas &&
-        formData.nombre && formData.nombre.length <= 50 &&
-        formData.tenencia &&
-        !isNaN(formData.s_cubi) && formData.s_cubi &&
-        !isNaN(formData.s_aire) && formData.s_aire &&
-        !isNaN(formData.s_sola) && formData.s_sola
-
 }
 
 </script>
@@ -794,7 +797,7 @@ const isValidForm = () => {
                 <button type="submit" :disabled="!isValidForm()"
                     class="self-stretch text-white bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs md:text-xl w-full px-5 py-2.5 text-center disabled:bg-gray-500">
                     Finalizar equipamiento
-                </button>                
+                </button>
             </div>
             <!-- fin botonera inferior -->
 
@@ -854,7 +857,7 @@ const isValidForm = () => {
             <label v-if="!isLoading" class="block mb-2 text-sm font-medium text-gray-900 my-4" for="file_input">
                 <div v-if="!userStore.user.is_desktop && userStore.user.role != 'cityhall'"
                     class="w-full focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
-                   
+
                     <div class="flex flex-col items-center justify-between text-xl">
                         <span>Subir Nueva Imagen</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -872,7 +875,7 @@ const isValidForm = () => {
                 id="file_input" type="file" @change="handleFileChange">
             <!-- fin boton de subida de imagen -->
 
-        </div> 
+        </div>
         <!-- fin listado de imagenes -->
     </div>
 
