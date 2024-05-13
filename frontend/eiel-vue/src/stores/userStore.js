@@ -1,8 +1,6 @@
-import { ref, computed, reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import { defineStore } from 'pinia'
-
 import { useRouter } from 'vue-router';
-
 
 export const useUserStore = defineStore('userStore', () => {
 
@@ -29,12 +27,9 @@ export const useUserStore = defineStore('userStore', () => {
   });
 
   const login = (jwt) => {
-
     localStorage.setItem('token', jwt)
-
     const tokenParts = jwt.split('.');
-    const decodedPayload = atob(tokenParts[1]);
-    
+    const decodedPayload = atob(tokenParts[1]);    
     const payloadObj = JSON.parse(decodedPayload);
     data.id = payloadObj.id;
     data.username = payloadObj.username;
@@ -42,9 +37,7 @@ export const useUserStore = defineStore('userStore', () => {
     data.token = jwt;
     data.municipality = payloadObj.municipality;
     data.is_desktop = payloadObj.is_desktop;
-
     router.replace({ name: 'MapView' })
-
   }
 
   const logout = () => {
@@ -55,8 +48,6 @@ export const useUserStore = defineStore('userStore', () => {
     data.token = '';
     data.municipality = '';
     data.is_desktop = true;
-
-    // router.replace({ name: 'Login' })
     window.location.href = '/login';
   }
   
