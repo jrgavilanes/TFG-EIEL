@@ -1,0 +1,36 @@
+name: DESPLIEGA RAMA MASTER A PRODUCCION
+
+on:
+  
+  push:
+    branches: [ "master" ]
+    
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      #- uses: actions/checkout@v3
+
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
+      - name: Set up SSH keys
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -t rsa ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+      
+      - name: Execute SSH command
+        run: |
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -l "${{ secrets.SSH_USERNAME }}" ${{ secrets.SERVER_HOST }} << EOF
+            cd TFG-EIEL/            
+            git pull
+            sh deploy-github.sh
+          EOF

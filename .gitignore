@@ -2,3 +2,5 @@
 backend/.idea/
 backend/venv/
 backend/**/__pycache__/
+.vscode/
+database/db_backup_*

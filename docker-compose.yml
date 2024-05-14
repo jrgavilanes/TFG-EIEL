@@ -1,0 +1,125 @@
+version: '3'
+services:
+
+  db:
+    image: postgis/postgis:13-3.1
+    container_name: postgis-eiel
+    restart: always
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: sig_local
+    volumes:
+      - ./database/initdb:/docker-entrypoint-initdb.d
+      - pgdata:/var/lib/postgresql/data
+    ports: [ "5432:5432" ]
+    depends_on:
+      - traefik
+
+  redis:
+    image: redis:6.2.6
+    container_name: redis
+    restart: always
+
+  tegola-mvt-postgis-provider:
+    image: gospatial/tegola:v0.16.0
+    container_name: tegola-mvt-postgis-provider
+    depends_on:
+      - db
+      - redis
+    restart: always
+    ports:
+      - 9005:8080
+    volumes:
+      - ./tegola:/data
+    command: >
+      serve --config /data/config.toml
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: sig_local
+      DB_USER: ${DATABASE_USER}
+      DB_PASSWORD: ${DATABASE_PASSWORD}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.app-http3.rule=${TEGOLA_DOMAIN}
+      - traefik.http.routers.app-http3.tls=true
+      - traefik.http.routers.app-http3.tls.certresolver=letsencrypt
+      - traefik.http.middlewares.tegola-https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.app-http3.middlewares=tegola-https-redirect
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: sig_local
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432      
+      S3_BUCKET_NAME: ${S3_BUCKET_NAME}
+      S3_REGION_NAME: ${S3_REGION_NAME}
+      S3_ENDPOINT_URL: ${S3_ENDPOINT_URL}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
+      S3_PHOTO_BASE_URL: ${S3_PHOTO_BASE_URL}
+      S3_PHOTO_MINIFY_BASE_URL: ${S3_PHOTO_MINIFY_BASE_URL}
+      PRODUCTION: "true"
+    volumes:      
+      - ./backend:/app
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.app-http2.rule=${APPLICATION_DOMAIN} && PathPrefix(`/api/`)
+      - traefik.http.routers.app-http2.tls=true
+      - traefik.http.routers.app-http2.tls.certresolver=letsencrypt
+      - traefik.http.middlewares.backend-https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.app-http2.middlewares=backend-https-redirect
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: php-apache-eiel
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: sig_local
+    volumes:
+      - ./frontend/eiel-vue/deployed:/var/www/html
+      - ./frontend/php.ini:/usr/local/etc/php/conf.d/php.ini
+    depends_on:
+      - db
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.app-http.rule=${APPLICATION_DOMAIN}
+      - traefik.http.routers.app-http.tls=true
+      - traefik.http.routers.app-http.tls.certresolver=letsencrypt
+      - traefik.http.middlewares.frontend-https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.app-http.middlewares=frontend-https-redirect
+
+  helper_frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile_helper
+    container_name: helper_frontend
+    volumes:
+      - ./frontend/eiel-vue:/eiel-vue
+
+  traefik:
+    image: traefik:v2.3
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/traefik.toml:/traefik.toml
+      - traefik-public-certificates:/certificates
+
+volumes:
+  pgdata:
+  traefik-public-certificates:

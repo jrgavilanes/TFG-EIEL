@@ -1,0 +1,10 @@
+FROM node:20-alpine
+
+RUN echo "cd /eiel-vue && \
+            npm install && \
+            npm run build && \
+            cd deployed && \
+            cp -rv ../dist/* ../dist/.htaccess . " > /build_frontend.sh
+
+# Build de frontend y mantén el contenedor en estado "idle"
+CMD sh /build_frontend.sh && tail -f /dev/null
