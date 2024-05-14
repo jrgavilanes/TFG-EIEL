@@ -43,7 +43,7 @@ const login = async () => {
             <!-- <a href="#" class="flex items-center text-2xl font-semibold text-gray-900 dark:text-white">
                 <img class="w-32 h-32" :src="logo" alt="logo">
             </a> -->
-            <p class="text-xl font-bold mb-6 my-12">TFG EIEL</p>
+            <p class="text-xl font-bold mb-6 my-12">TFG EIEL 1</p>
             <div class="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 ">
                 <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
                     <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
