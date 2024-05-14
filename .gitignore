@@ -4,3 +4,4 @@ backend/venv/
 backend/**/__pycache__/
 .vscode/
 database/db_backup_*
+frontend/eiel-vue/deployed/*
