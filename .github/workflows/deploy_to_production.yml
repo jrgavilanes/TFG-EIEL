@@ -30,7 +30,7 @@ jobs:
       - name: Execute SSH command
         run: |
           sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -l "${{ secrets.SSH_USERNAME }}" ${{ secrets.SERVER_HOST }} << EOF
-            cd avantgeo-eiel/            
+            cd TFG-EIEL/            
             git pull
             sh deploy-github.sh
           EOF
