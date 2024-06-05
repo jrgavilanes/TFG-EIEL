@@ -38,7 +38,7 @@ const login = async () => {
 </script>
 
 <template>
-    <section class="bg-red-200 h-screen">
+    <section class="bg-gray-50 h-screen">
         <div class="flex flex-col items-center justify-start px-6 pb-8 mx-auto md:h-screen lg:py-0">
             <!-- <a href="#" class="flex items-center text-2xl font-semibold text-gray-900 dark:text-white">
                 <img class="w-32 h-32" :src="logo" alt="logo">
