@@ -14,8 +14,11 @@ Construye entorno ```docker-compose up --build```
 
 Restaura base de datos (Elimina la base de datos, crea base datos, restaura backup completo )
 ```bash
-docker exec postgis-eiel dropdb -U janrax sig_local && docker exec postgis-eiel createdb -U janrax sig_local
-docker exec -i postgis-eiel psql -U janrax -d sig_local < db_backup.sql
+# Detiene todos los contenedores activos y levanta sólo la base de datos
+docker-compose -f docker-compose.yml stop && docker start tfg-postgis-eiel
+
+docker exec tfg-postgis-eiel dropdb -U janrax sig_local && docker exec tfg-postgis-eiel createdb -U janrax sig_local
+docker exec -i tfg-postgis-eiel psql -U janrax -d sig_local < backup_base.sql
 ```
 
 
